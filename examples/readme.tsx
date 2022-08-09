@@ -1,40 +1,49 @@
-import { ReactNode } from "react";
+import { useState, useEffect, useRef } from 'react';
+
+interface IUseTableOptions {
+  dataSource: Record<string, any>[];
+  loading: boolean;
+  current: number;
+  pageSize: number;
+  total: number;
+}
+
+interface IGetDataSourceParams {
+  current: number;
+  pageSize: number;
+  filters: Record<string | number | symbol, string[]>;
+  sorter: any;
+}
+
+interface IGetDataSourceResp {
+  list: Record<string, any>[];
+  total: number;
+}
+
+const defaultOptions: IUseTableOptions = {
+  dataSource: [],
+  loading: false,
+  current: 1,
+  pageSize: 10,
+  total: 0,
+};
 
 /**
- * @title Alert
- *
- * @zh
- *
- * 向用户显示警告的信息时，通过警告提示，展现需要关注的信息。
- *
- * @en
- *
- * Display warning information to the user. the Alert is used to display the information that needs attention.
+ * @title useArcoTable
  */
-export interface AlertProps {
+type UseArcoTable = (
   /**
-   * @zh 自定义操作项
-   * @en this is action
-   * @version 2.15.0
+   * @zh 请求函数
+   * @defaultValue 'default' (可选，参数的默认值)
    */
-  action?: ReactNode;
+  fn: (p: IGetDataSourceParams) => Promise<IGetDataSourceResp>,
   /**
-   * @zh 是否可以关闭
-   * @en Whether Alert can be closed
-   * @defaultValue false
+   * @zh 参数
    */
-  closable?: InnerProps;
-}
-
-interface InnerProps {
+  options: IUseTableOptions,
   /**
-   * @zh 位置
-   * @en position
+   * @zh 是否初始请求
+   * @defaultValue 'true' (可选，参数的默认值)
    */
-  position?: string;
-  /**
-   * @zh 尺寸
-   * @en Size
-   */
-  size?: string;
-}
+  startRequest: boolean
+) => any;
